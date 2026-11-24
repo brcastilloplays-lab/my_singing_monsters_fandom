@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Security Header for Static Hosting -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline';">
+    <title>My Singing Monsters Encyclopedia & Wiki</title>
+    <style>
+        :root {
+            --bg-dark: #131a24;
+            --bg-card: #1d2838;
+            --bg-hover: #26354a;
+            --accent-green: #4caf50;
+            --accent-gold: #ffca28;
+            --accent-blue: #29b6f6;
+            --text-main: #f0f4f8;
+            --text-muted: #9fb3c8;
+            --border-color: #334e68;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1b3b2b 0%, #162b44 100%);
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--accent-gold);
+        }
+
+        header h1 {
+            margin: 0;
+            color: var(--accent-gold);
+            font-size: 2.2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+        }
+
+        header p {
+            color: var(--text-muted);
+            margin: 8px 0 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Navigation Tabs */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .tab-btn:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .tab-btn.active {
+            background-color: var(--accent-green);
+            border-color: var(--accent-green);
+            color: #fff;
+        }
+
+        /* Search and Filter Bar */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], select {
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 15px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Grid for Monsters & Islands */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 18px;
+            transition: transform 0.15s, border-color 0.15s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-gold);
+        }
+
+        .card h3 {
+            margin: 0 0 8px;
+            color: var(--accent-gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badge {
+            font-size: 12px;
+            background-color: #2c3e50;
+            color: var(--accent-blue);
+            padding: 3px 8px;
+            border-radius: 12px;
+            border: 1px solid var(--accent-blue);
+        }
+
+        .card p {
+            margin: 6px 0;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .card strong {
+            color: var(--text-main);
+        }
+
+        /* Guide Boxes */
+        .guide-box {
+            background-color: var(--bg-card);
+            border-left: 4px solid var(--accent-green);
+            padding: 18px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .guide-box h3 {
+            margin-top: 0;
+            color: var(--accent-green);
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>My Singing Monsters Wiki</h1>
+    <p>Complete Guide to Monsters, Elements, Islands, Breeding Combos & Mechanics</p>
+</header>
+
+<div class="container">
+    <!-- Navigation Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('monsters', this)">Monsters</button>
+        <button class="tab-btn" onclick="switchTab('islands', this)">Islands</button>
+        <button class="tab-btn" onclick="switchTab('elements', this)">Elements & Classes</button>
+        <button class="tab-btn" onclick="switchTab('mechanics', this)">Breeding & Mechanics</button>
+    </div>
+
+    <!-- MONSTERS TAB -->
+    <div id="monsters" class="section active">
+        <div class="controls">
+            <input type="text" id="monsterSearch" placeholder="Search monster name, island, or combo..." onkeyup="renderMonsters()">
+            <select id="classFilter" onchange="renderMonsters()">
+                <option value="All">All Monster Classes</option>
+                <option value="Natural">Natural</option>
+                <option value="Fire">Fire</option>
+                <option value="Magical">Magical</option>
+                <option value="Ethereal">Ethereal</option>
+                <option value="Mythical">Mythical</option>
+                <option value="Seasonal">Seasonal</option>
+                <option value="Supernatural">Supernatural (Wubbox)</option>
+                <option value="Legendary">Legendary</option>
+            </select>
+        </div>
+        <div class="grid" id="monsterGrid"></div>
+    </div>
+
+    <!-- ISLANDS TAB -->
+    <div id="islands" class="section">
+        <div class="grid" id="islandGrid"></div>
+    </div>
+
+    <!-- ELEMENTS TAB -->
+    <div id="elements" class="section">
+        <div class="guide-box">
+            <h3>Natural Elements</h3>
+            <p><strong>Plant, Cold, Air, Water, Earth:</strong> The five core elements found across the main Natural Islands (Plant, Cold, Air, Water, and Earth Islands).</p>
+        </div>
+        <div class="guide-box">
+            <h3>Fire & Magical Elements</h3>
+            <p><strong>Fire:</strong> Rediscovered on Fire Haven and Fire Oasis.<br>
+            <strong>Psychic, Faerie, Bone, Light:</strong> Exclusive to the four Magical Islands and Magical Sanctum / Magical Nexus.</p>
+        </div>
+        <div class="guide-box">
+            <h3>Ethereal Elements</h3>
+            <p><strong>Plasma, Shadow, Mech, Crystal, Poison:</strong> Rare single-element monsters bred on Natural Islands using a Quad-element + Triple-element monster, or combined on Ethereal Island and Ethereal Workshop.</p>
+        </div>
+        <div class="guide-box">
+            <h3>Special Classes</h3>
+            <p><strong>Mythical & Dreamythical:</strong> Special monsters found on Natural/Fire Islands and Mythical Island.<br>
+            <strong>Seasonal:</strong> Limited-time monsters tied to real-world holidays (Punkleton, Yool, Schmoochle, Blabbit, Hoola, etc.) that gather on Seasonal Shanty.<br>
+            <strong>Supernatural (Wublins & Wubbox):</strong> Awakened by zapping eggs into statues or boxing monsters.<br>
+            <strong>Celestial:</strong> Ancient god-like monsters representing each month on Celestial Island.</p>
+        </div>
+    </div>
+
+    <!-- MECHANICS TAB -->
+    <div id="mechanics" class="section">
+        <div class="guide-box">
+            <h3>1. How Breeding Works</h3>
+            <p>Combine two monsters with different elements in the Breeding Structure. Single + Single = Double-element. Double + Single = Triple-element. Triple + Single (or Double + Double) = Quad-element. Monsters with the exact same elements cannot breed together.</p>
+        </div>
+        <div class="guide-box">
+            <h3>2. Wishing Torches</h3>
+            <p>Each Wishing Torch lit on an island increases your chances of breeding Rare, Epic, Ethereal, Mythical, and Seasonal monsters. Friends can light your torches for free, or you can light them permanently with Diamonds.</p>
+        </div>
+        <div class="guide-box">
+            <h3>3. Monster Happiness & Likes</h3>
+            <p>Every monster has 4 "Likes" (specific decorations or other monsters). Placing liked items nearby increases Happiness up to 100%, which doubles the speed at which the monster produces Coins or Shards.</p>
+        </div>
+        <div class="guide-box">
+            <h3>4. Currencies</h3>
+            <p><strong>Coins:</strong> Earned by Natural/Fire/Magical monsters; used for food, islands, and structures.<br>
+            <strong>Diamonds:</strong> Premium currency used to speed up breeding, upgrade structures, and buy special monsters.<br>
+            <strong>Food (Treats):</strong> Baked in Bakeries to level up monsters. Level 4 unlocks breeding; Level 15 unlocks teleporting to Gold/Ethereal/Shugabush Islands.<br>
